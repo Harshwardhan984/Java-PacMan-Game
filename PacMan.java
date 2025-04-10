@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import javax.swing.*;
@@ -47,18 +48,18 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         void updateVelocity() {
             if (this.direction == 'U') {
                 this.velocityX = 0;
-                this.velocityY = -tileSize/4;
+                this.velocityY = -tileSize / 4;
             }
             else if (this.direction == 'D') {
                 this.velocityX = 0;
-                this.velocityY = tileSize/4;
+                this.velocityY = tileSize / 4;
             }
             else if (this.direction == 'L') {
-                this.velocityX = -tileSize/4;
+                this.velocityX = -tileSize / 4;
                 this.velocityY = 0;
             }
             else if (this.direction == 'R') {
-                this.velocityX = tileSize/4;
+                this.velocityX = tileSize / 4;
                 this.velocityY = 0;
             }
         }
@@ -98,7 +99,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         "XXXX XXXX XXXX XXXX",
         "OOOX X       X XOOO",
         "XXXX X XXrXX X XXXX",
-        "O       bpo       O",
+        "*       bpo       *",
         "XXXX X XXXXX X XXXX",
         "OOOX X       X XOOO",
         "XXXX X XXXXX X XXXX",
@@ -115,6 +116,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     HashSet<Block> walls;
     HashSet<Block> foods;
     HashSet<Block> ghosts;
+    ArrayList<Block> skips;
     Block pacman;
 
     Timer gameLoop;
@@ -157,6 +159,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         walls = new HashSet<Block>();
         foods = new HashSet<Block>();
         ghosts = new HashSet<Block>();
+        skips = new ArrayList<Block>();
 
         for (int r = 0; r < rowCount; r++) {
             for (int c = 0; c < columnCount; c++) {
@@ -169,6 +172,10 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
                 if (tileMapChar == 'X') { //block wall
                     Block wall = new Block(wallImage, x, y, tileSize, tileSize);
                     walls.add(wall);
+                }
+                else if(tileMapChar == '*') { //block skip
+                    Block skip = new Block(null, x, y, tileSize, tileSize);
+                    skips.add(skip);
                 }
                 else if (tileMapChar == 'b') { //blue ghost
                     Block ghost = new Block(blueGhostImage, x, y, tileSize, tileSize);
@@ -220,7 +227,18 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         //score
         g.setFont(new Font("Arial", Font.PLAIN, 18));
         if (gameOver) {
-            g.drawString("Game Over: " + String.valueOf(score), tileSize/2, tileSize/2);
+            Graphics2D g2d = (Graphics2D) g;
+
+g2d.setFont(new Font("Arial", Font.BOLD, 36)); // Set large bold font
+
+FontMetrics fm = g2d.getFontMetrics();
+String msg = "Game Over: " + score;
+int xt = (boardWidth - fm.stringWidth(msg)) / 2; // Center horizontally
+int yt = (boardHeight - fm.getHeight()) / 2 + fm.getAscent(); // Center vertically
+g2d.setColor(Color.BLACK);
+g2d.fillRect(xt - 10, yt - fm.getAscent(), fm.stringWidth(msg) + 20, fm.getHeight());
+g2d.setColor(Color.RED); // Set text color to red
+g2d.drawString(msg, xt, yt);
         }
         else {
             g.drawString("x" + String.valueOf(lives) + " Score: " + String.valueOf(score), tileSize/2, tileSize/2);
@@ -239,6 +257,18 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
                 break;
             }
         }
+        //check skip collisions
+        if(collision(pacman, skips.get(0))){
+            Block next = skips.get(1);
+            pacman.x = next.x - next.width - 1;
+            pacman.y = next.y;
+        }
+        if(collision(pacman, skips.get(1))){
+            Block next1 = skips.get(0);
+            pacman.x = next1.x + next1.width + 1;
+            pacman.y = next1.y;
+        }
+
 
         //check ghost collisions
         for (Block ghost : ghosts) {
@@ -247,6 +277,12 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
                 if (lives == 0) {
                     gameOver = true;
                     return;
+                }
+                try {
+                    Thread.sleep(2000); // Pause for 1 second (1000 milliseconds)
+                } catch (InterruptedException e) {
+                    // Handle the exception if the thread is interrupted while sleeping
+                    e.printStackTrace();
                 }
                 resetPositions();
             }
@@ -315,6 +351,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {}
 
+    // This is only work for key Released at block where there is no Wall
     @Override
     public void keyReleased(KeyEvent e) {
         if (gameOver) {
@@ -325,17 +362,17 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
             gameOver = false;
             gameLoop.start();
         }
-        // System.out.println("KeyEvent: " + e.getKeyCode());
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
+        //System.out.println("KeyEvent: " + e.getKeyCode());
+        if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == 87) {
             pacman.updateDirection('U');
         }
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == 83) {
             pacman.updateDirection('D');
         }
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == 65) {
             pacman.updateDirection('L');
         }
-        else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+        else if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == 68) {
             pacman.updateDirection('R');
         }
 
