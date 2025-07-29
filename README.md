@@ -25,13 +25,11 @@ Object-Oriented Programming principles
 
 Java-PacMan-Game/
 ├── src/
-│   ├── Game.java
-│   ├── Player.java
-│   ├── Ghost.java
-│   ├── Map.java
+│   ├── App.java
+│   ├── PacMan.java
 │   └── ...
 ├── assets/
-│   ├── sprites/
+│   ├── image/
 │   └── sounds/
 ├── README.md
 └── ...
