@@ -1,9 +1,58 @@
-# [Pacman]
-
-In this tutorial, you will learn to create the pacman game with the built-in java awt/swing graphics library.
-
-Throughout the tutorial, you will learn how to create the game loop, create a jframe and jpanel, draw images on the jpanel, load the game map using a tilemap, add click handlers to make the pacman move, create a simple algorithm to move each ghost at random, detect collisions between the pacman and ghosts, have pacman eat the food pellets, add a running score, and reset the game when pacman collides with a ghost. 
+🎮 Java PacMan Game
+A simple PacMan-style 2D game built using Java and Swing. This project demonstrates object-oriented programming principles and basic game development concepts including animations, collision detection, and game loops.
 
 
-## Homework:
-You can continue working on this project if you like. You can design your own map by modifying the tileMap if you want. You can add power pellets to allow pacman to eat the ghosts. In addition, there is an opening on left and right, where if pacman goes through, it would appear on the other side of the map. Currently pacman just moves off screen out of the map so a fix would be needed to make pacman appear the other side. For more of a challenge, you can modify the ghosts movement to cover areas unreachable since the ghosts only change directions when they collide against a wall, and not when theres another path available to go through.
+
+🚀 Features
+Classic PacMan gameplay
+
+Responsive keyboard controls
+
+
+Score tracking and game over conditions
+
+Java Swing GUI
+
+🛠️ Built With
+Java
+
+Java Swing for GUI
+
+Object-Oriented Programming principles
+
+📂 Project Structure
+
+Java-PacMan-Game/
+├── src/
+│   ├── Game.java
+│   ├── Player.java
+│   ├── Ghost.java
+│   ├── Map.java
+│   └── ...
+├── assets/
+│   ├── sprites/
+│   └── sounds/
+├── README.md
+└── ...
+🧩 How to Run
+Clone the repository
+
+git clone https://github.com/Harshwardhan984/Java-PacMan-Game.git
+
+Compile the project
+
+javac App.java
+
+Run the game
+
+java App
+✅ Make sure you have Java installed. (Recommended: Java 11+)
+
+🎯 Learning Objectives
+Understanding basic game mechanics
+
+Practicing OOP concepts in Java
+
+GUI handling with Java Swing
+
+Managing input, game states, and rendering
