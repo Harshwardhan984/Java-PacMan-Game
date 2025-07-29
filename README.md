@@ -1,4 +1,5 @@
 🎮 Java PacMan Game
+
 A simple PacMan-style 2D game built using Java and Swing. This project demonstrates object-oriented programming principles and basic game development concepts including animations, collision detection, and game loops.
 
 
